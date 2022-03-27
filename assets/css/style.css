@@ -1,0 +1,53 @@
+/* CSS Styles */
+.custom_Jumbo {
+    padding: 15px 0 15px 0;
+    background-image: linear-gradient(to right, #143840, #343a80);
+    font-weight: bolder;
+    color: white;
+}
+
+.custom_Container {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.custom_Card_Container {
+    margin: 0;
+    padding: 0;
+    justify-content: space-between;
+}
+
+h1 {
+    padding-left: 0px;
+}
+
+h3 {
+    padding-bottom: 5px;
+}
+
+p, h5, h6 {
+    padding: 10px 5px 5px 5px;
+}
+
+.card {
+    background-color: #343a60;
+    /* margin: 10px; */
+    border-radius: 0;
+    color: white;
+}
+
+.card-body {
+    padding: 3px;
+}
+
+.displayUVIndex {
+    padding: 10px 15px 10px 15px;
+}
+
+.UV_Box {
+    font-size: 15px;
+    padding: 13px 10px 7px 10px;
+    vertical-align:  bottom;
+    background-color: green;
+    border-radius: 5px;
+}
