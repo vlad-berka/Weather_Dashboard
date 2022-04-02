@@ -7,21 +7,24 @@ function getCity_Button() {
 
     // If the search button is clicked
     if (cityChoice == "Search") {
+        console.log("search button clicked");
         //Get the entered value from the text area
         var enteredCity = $(".form-control").val();
         //If nothing there, do nothing
+        console.log(enteredCity);
         if (enteredCity) {
             cityChoice = enteredCity;
+            saveLocalStorage(cityChoice);
         }
         else {
             return;
         }
     }
     else {
-        $(".displayCity").text(cityChoice);
-        saveData_Fun(cityChoice);
-        get_LatLong(cityChoice);
+        console.log("citybutton clicked: " +cityChoice);
     }
+    $(".displayCity").text(cityChoice + " ("+moment().format('MM/DD/YY')+")");
+    get_LatLong(cityChoice);
 }
 
 function get_LatLong(cityString) {
@@ -45,6 +48,8 @@ function get_Weather(latitude, longitude) {
 }
 
 function print_Data(data) {
+    console.log("in print data");
+    $('.emoji0').attr('src', "https://openweathermap.org/img/wn/"+data.current.weather[0].icon +"@2x.png");
     $(".displayTemp").text("Temp: " +(Math.floor((data.current.temp-273)*9/5)+32) +" °F");
     $(".displayWind").text("Windspeed: " +(Math.floor(data.current.wind_speed)) +" MPH");
     $(".displayHumidity").text("Humidity: " +data.current.humidity +" %");
@@ -65,22 +70,50 @@ function checkForData() {
     if (savedData==null){
         savedData = [];
         savedData.push("Seattle"); 
+        populateButtons();
     }
     //Else, start populating buttons
     else {
         console.log("populate buttons");  
+        populateButtons();
     }
     localStorage.setItem("savedDataWeather", JSON.stringify(savedData));
 }
 
-function saveData_Fun(newEntry) {
+function saveLocalStorage(newEntry) {
     if(savedData.length == 8) {
         savedData.shift();
+        savedData.push(newEntry);
     }
-    savedData.append(newEntry);
+    else {
+        savedData.push(newEntry);
+        // $('.button_Container').append($('<button>').attr("type","button").addClass("btn btn-secondary btn-lg btn-block").text(newEntry));
+    }
+    // $('.button_Container').append($('<button>').attr("type","button").addClass("btn btn-secondary btn-lg btn-block").text(newEntry));
+    populateButtons();
     localStorage.setItem("savedDataWeather", JSON.stringify(savedData));
-    console.log(savedData);
+    location.reload();
 }
+
+function populateButtons() {
+    $('.button_Container').text("");
+    $('.button_Container').append($('<h2>').attr("style","font-weight: bold").text("Search for a City:"));
+    $('.button_Container').append($('<input>').attr("type","text").addClass("form-control").attr("placeholder","Enter a City...").attr("aria-label","City name search"));
+    $('.button_Container').append($('<br>'));
+    $('.button_Container').append($('<button>').attr("type","button").addClass("btn btn-primary btn-lg btn-block").text("Search"));
+    $('.button_Container').append($('<hr>').attr("style","style1"));
+
+    for(var i=savedData.length; i>0; i--){
+        console.log(savedData[i-1]);
+        $('.button_Container').append($('<button>').attr("type","button").addClass("btn btn-secondary btn-lg btn-block").text(savedData[i-1]));
+    }
+    $(".displayCity").text(savedData[savedData.length-1] + " ("+moment().format('MM/DD/YY')+")");
+    get_LatLong(savedData[savedData.length-1]);
+}
+
+// function deleteButtons() {
+
+// }
 
 checkForData();
 get_LatLong("Seattle");
