@@ -28,7 +28,7 @@ function getCity_Button() {
 }
 
 function get_LatLong(cityString) {
-    fetch("http://api.openweathermap.org/geo/1.0/direct?q=" + cityString + "&limit=1&appid=799e51a3c5dc5df506ba2f4329ae7a95")
+    fetch("https://api.openweathermap.org/geo/1.0/direct?q=" + cityString + "&limit=1&appid=799e51a3c5dc5df506ba2f4329ae7a95")
     .then(function (response) {
         return response.json();
     })
@@ -54,6 +54,7 @@ function print_Data(data) {
     $(".displayWind").text("Windspeed: " +(Math.floor(data.current.wind_speed)) +" MPH");
     $(".displayHumidity").text("Humidity: " +data.current.humidity +" %");
     $(".UV_Box").text(data.current.uvi + " Index");
+    update_UV_Color(data.current.uvi);
 
     for(var i=1; i<6; i++){
         $('.card-body').filter('[data-id="'+i+'"]').children()[0].textContent = moment().add(i, 'days').format('MM/DD/YY');
@@ -111,9 +112,29 @@ function populateButtons() {
     get_LatLong(savedData[savedData.length-1]);
 }
 
-// function deleteButtons() {
-
-// }
+function update_UV_Color(UV_Index) {
+    console.log((UV_Index));
+    var red_ = 255;
+    var green_ = 0;
+    var blue_ = 0;
+    if(UV_Index > 11) {
+        //If greater than 11, make it red
+        $(".UV_Box").attr("style", "background-color: rgb(255,0,0)");
+    }
+    else {
+        //red linear interpolation. 255 down to 105 over 11
+        if(UV_Index>5){
+            red_ = 255;
+            green_ = Math.floor(183-UV_Index*(183-0)/(11-5));
+        }
+        else {
+            red_ = Math.floor(105+UV_Index*(255-105)/5);
+            green_ = 183;
+        }
+        var blue_ = Math.floor(76-UV_Index*(76-0)/11);
+        $(".UV_Box").attr("style", "background-color: rgb(" +red_+","+green_+","+blue_+")");
+    }
+}
 
 checkForData();
 get_LatLong("Seattle");
